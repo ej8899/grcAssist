@@ -27,6 +27,13 @@
 # MODIFICATIONS by ErnieJohnson.ca 
 # (largely colorization of output and other minor tweaks)
 #
+# CHANGELOG:
+# 2024-08-29:
+# add colorization of screen output
+# tweak formatting of screen output
+# update README.md with a bit more content ;)
+# translate %20 to spaces in CSV output file
+#
 
 # You will likely need to 
 # pip install openpyxl
@@ -64,7 +71,7 @@ def search_news(keyword, api_key, category="technology", language="en"):
   """
   url = f"https://newsdata.io/api/1/news?apikey={api_key}&q={keyword}&language={language}&category={category}"
   response = requests.get(url)
-  print(url)
+  # print(url)
 
   try:
     data = response.json()
@@ -81,7 +88,7 @@ def search_news(keyword, api_key, category="technology", language="en"):
       write_to_spreadsheet(articles, filename, keyword)
     return articles
   except (requests.exceptions.RequestException, KeyError):
-    print(f"Error: An error occurred while fetching data from the API.")
+    print(f"{RED}Error:{RESET} {YELLOW}An error occurred while fetching data from the API.{RESET}")
     return []
 
 def write_to_spreadsheet(articles, filename, keyword):
@@ -92,11 +99,13 @@ def write_to_spreadsheet(articles, filename, keyword):
       articles: A list of dictionaries containing article data.
       filename: The filename for the spreadsheet.
   """
-  today = datetime.date.today().strftime("%Y-%m-%d")
+  parsed_keyword = keyword.replace("%20", " ")
+
+  today = datetime.date.today().strftime("%Y-%m-%d") 
   with open(filename, 'a', newline='', encoding='utf-8') as csvfile:
-    writer = csv.writer(csvfile)
-    for article in articles:
-      writer.writerow([today, keyword, article["headline"], article["description"], article["url"]])
+      writer = csv.writer(csvfile)
+      for article in articles:
+          writer.writerow([today, parsed_keyword, article["headline"], article["description"], article["url"]])
 
 
 def main():
@@ -114,12 +123,12 @@ def main():
   # Alternatively, get keywords from user input
   # keywords = input("Enter keywords separated by commas: ").split(",")
 
-  api_key = "YOUR_API_KEY_HERE" # Replace with your actual NewsData.io API key
+  api_key = "YOUR_KEY_HERE" # Replace with your actual NewsData.io API key
 
   for keyword in keywords:
     articles = search_news(keyword.strip(), api_key)
     if articles:
-      print(f"\n{YELLOW}Search results for '{CYAN}{keyword}':\n")
+      print(f"\n{YELLOW}Search results for '{CYAN}{keyword}{YELLOW}':{RESET}\n")
       for article in articles:
         print(f"{CYAN}{article['headline']}")
         if article["description"]:
