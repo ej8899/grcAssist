@@ -57,3 +57,5 @@ Once you have set up your API key and updated the `keywords.csv` file with your 
    ```
 2. The program will pull relevant news articles based on the keywords provided and display them in the output or save them to a file (as specified in the code).
 
+---
+This python application is originally from https://github.com/gerryguy311/grcAssist
