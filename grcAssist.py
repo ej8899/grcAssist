@@ -23,11 +23,31 @@
 
 #Gerald Auger, 7/22/24, SimplyCyber.io
 
+#
+# MODIFICATIONS by ErnieJohnson.ca 
+# (largely colorization of output and other minor tweaks)
+#
+
+# You will likely need to 
+# pip install openpyxl
+# (EJ)
+
 import csv
 import requests
 import datetime
 from openpyxl import Workbook
 import urllib.parse
+
+# colorizing by (EJ)
+BLACK = "\033[0;30m"
+RED = "\033[0;31m"
+GREEN = "\033[0;32m"
+YELLOW = "\033[0;33m"
+BLUE = "\033[0;34m"
+MAGENTA = "\033[0;35m"
+CYAN = "\033[0;36m"
+WHITE = "\033[0;37m"
+RESET = "\033[0m"
 
 def search_news(keyword, api_key, category="technology", language="en"):
   """
@@ -94,18 +114,19 @@ def main():
   # Alternatively, get keywords from user input
   # keywords = input("Enter keywords separated by commas: ").split(",")
 
-  api_key = "YOUR_API_KEY_HERE"  # Replace with your actual NewsData.io API key
+  api_key = "YOUR_API_KEY_HERE" # Replace with your actual NewsData.io API key
 
   for keyword in keywords:
     articles = search_news(keyword.strip(), api_key)
     if articles:
-      print(f"\nSearch results for '{keyword}':")
+      print(f"\n{YELLOW}Search results for '{CYAN}{keyword}':\n")
       for article in articles:
-        print(f"\t- {article['headline']}")
-        print(f"\t\t{article['description']}")
-        print(f"\t\t{article['url']}\n")
+        print(f"{CYAN}{article['headline']}")
+        if article["description"]:
+          print(f"{GREEN}{article['description']}...")
+        print(f"{YELLOW}{article['url']}{RESET}\n\n")
     else:
-      print(f"No articles found for '{keyword}'.")
+      print(f"{RED}No articles found for '{CYAN}{keyword}{RESET}'.")
 
 
 if __name__ == "__main__":
